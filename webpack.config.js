@@ -1,4 +1,5 @@
 const defaultsDeep = require('lodash.defaultsdeep');
+const WorkerPlugin = require('worker-plugin');
 var path = require('path');
 var webpack = require('webpack');
 
@@ -87,6 +88,9 @@ const base = {
                 include: /\.min\.js$/
             })
         ]
+    },
+    node: {
+        fs: 'empty'
     },
     plugins: []
 };
@@ -190,6 +194,9 @@ module.exports = [
                         context: 'node_modules/scratch-vm/dist/web'
                     }
                 ]
+            }),
+            new WorkerPlugin({
+              preserveTypeModule: true
             })
         ])
     })

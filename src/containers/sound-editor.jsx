@@ -23,7 +23,9 @@ const MAX_RMS = 1.2;
 
 class SoundEditor extends React.Component {
     constructor (props) {
+        console.log("ZZZZZZZZZZZZZNSTRUCTOR");
         super(props);
+        console.log("POPRSSS:" + Object.keys(props));
         bindAll(this, [
             'copy',
             'copyCurrentBuffer',
@@ -50,6 +52,7 @@ class SoundEditor extends React.Component {
         this.state = {
             copyBuffer: null,
             chunkLevels: computeChunkedRMS(this.props.samples),
+            onsets: null,
             playhead: null, // null is not playing, [0 -> 1] is playing percent
             trimStart: null,
             trimEnd: null
@@ -58,11 +61,20 @@ class SoundEditor extends React.Component {
         this.redoStack = [];
         this.undoStack = [];
 
+        this.audioWorker = new Worker("../lib/audio/sound-slicer.js", {type: "module"});
+        this.audioWorker.onmessage = event => {
+          console.log('yar:' + event.data);
+          this.setState({
+              onsets: event.data
+          });
+        };
+        this.audioWorker.postMessage({"samples": this.props.samples,
+                                      "samplerRate":this.props.sampleRate});
+
         this.ref = null;
     }
     componentDidMount () {
         this.audioBufferPlayer = new AudioBufferPlayer(this.props.samples, this.props.sampleRate);
-
         document.addEventListener('keydown', this.handleKeyPress);
     }
     componentWillReceiveProps (newProps) {
@@ -140,6 +152,8 @@ class SoundEditor extends React.Component {
             chunkLevels: computeChunkedRMS(samples),
             playhead: null
         });
+        this.audioWorker.postMessage({"samples": samples,
+                                      "samplerRate":sampleRate});
     }
     submitNewSamples (samples, sampleRate, skipUndo) {
         return downsampleIfNeeded({samples, sampleRate}, this.resampleBufferToRate)
@@ -170,6 +184,7 @@ class SoundEditor extends React.Component {
             });
     }
     handlePlay () {
+        console.log("PLAYPOOOOO-YOO");
         this.audioBufferPlayer.stop();
         this.audioBufferPlayer.play(
             this.state.trimStart || 0,
@@ -430,12 +445,14 @@ class SoundEditor extends React.Component {
     }
     render () {
         const {effectTypes} = AudioEffects;
+        console.log("SOJND END RENFDER!");
         return (
             <SoundEditorComponent
                 canPaste={this.state.copyBuffer !== null}
                 canRedo={this.redoStack.length > 0}
                 canUndo={this.undoStack.length > 0}
                 chunkLevels={this.state.chunkLevels}
+                onsets={this.state.onsets}
                 name={this.props.name}
                 playhead={this.state.playhead}
                 setRef={this.setRef}
@@ -467,6 +484,22 @@ class SoundEditor extends React.Component {
         );
     }
 }
+
+//async function computeOnsets(samples, sampleRate) {
+//  console.log("YO, I IS ONSETTTING! " + samples.length + " " + sampleRate);
+//  const sampleCount = samples.length;
+//
+//  let audioWorker = new Worker("./sound-slicer.js", {type: "module"});
+//  audioWorker.onmessage = event => {
+//    console.log('yar:' + event.data);
+//  };
+//  audioWorker.postMessage({"samples": samples, "samplerRate":sampleRate});
+//
+//  const chunkLevels = [];
+//  return chunkLevels;
+//};
+
+
 
 SoundEditor.propTypes = {
     isFullScreen: PropTypes.bool,

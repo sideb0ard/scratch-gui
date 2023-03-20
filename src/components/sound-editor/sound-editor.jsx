@@ -3,6 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {defineMessages, FormattedMessage, injectIntl, intlShape} from 'react-intl';
 
+import Onsets from '../onsets/onsets.jsx';
 import Waveform from '../waveform/waveform.jsx';
 import Label from '../forms/label.jsx';
 import Input from '../forms/input.jsx';
@@ -213,6 +214,11 @@ const SoundEditor = props => (
             <div className={styles.waveformContainer}>
                 <Waveform
                     data={props.chunkLevels}
+                    height={160}
+                    width={600}
+                />
+                <Onsets
+                    onsets={props.onsets}
                     height={160}
                     width={600}
                 />

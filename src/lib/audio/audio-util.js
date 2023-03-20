@@ -1,3 +1,4 @@
+import regeneratorRuntime from 'regenerator-runtime';
 import WavEncoder from 'wav-encoder';
 
 const SOUND_BYTE_LIMIT = 10 * 1000 * 1000; // 10mb
