@@ -80,12 +80,14 @@ function computeOnsets () {
 function calculateOnsets(data) {
   self.signal = data.samples;
   console.log("YO, GOT DATA", data);
+  const length_of_audio = 1. / data.sampleRate * data.samples.length;
+  console.log("LENGTH OF AUDIO!" + length_of_audio);
   computeFFT();
   //computeOnsets()
   let onsetPositions = computeOnsets();
   console.log("YO, ONSETS:" + onsetPositions);
   // const slices = sliceAudio();
-  return onsetPositions;
+  return {audio_len: length_of_audio, onsets: onsetPositions};
 }
 
 addEventListener('message', event => {

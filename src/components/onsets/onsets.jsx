@@ -4,18 +4,19 @@ import React from 'react';
 
 import styles from './onsets.css';
 
-const Onsets = (props) => (
-    <div className={classNames(styles.container)}>
-      { props.onsets ? 
-          props.onsets.map(item => (<div/>))
-        :
-          console.log("NAHHH")
-      }
-    </div>
-);
+const Onsets = function(props) {
 
-Onsets.propTypes = {
-    className: PropTypes.string,
-};
+  console.log(props.width);
+  const pct_len = 100 / props.audio_length_ms;
+  const width_one_pct = 808 / 100;
+  const onsets = Object.values(props.onsets).map((data,index) => 
+    <div key={index} style={{left: data * pct_len * width_one_pct}} className={classNames(styles.vl)}/>
+  );
+  return (
+    <div className={classNames(styles.container)}>
+    {onsets}
+    </div>
+  );
+}
 
 export default Onsets;

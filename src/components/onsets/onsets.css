@@ -7,11 +7,19 @@
   top: 0;
   left: 0;
   z-index: 10;
+  margin: 0;
+  border: 0;
+  padding: 0;
 }
 
 .vl {
   height:100%;
-  border-left: 6px solid green;
+  display: inline-block;
+  border-left: 2px solid black;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  left: 0%;
 }
 
 

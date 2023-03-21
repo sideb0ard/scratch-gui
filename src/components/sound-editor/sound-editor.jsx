@@ -219,6 +219,7 @@ const SoundEditor = props => (
                 />
                 <Onsets
                     onsets={props.onsets}
+                    audio_length_ms={props.audio_length_ms}
                     height={160}
                     width={600}
                 />
